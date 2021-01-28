@@ -18,7 +18,6 @@
         <div class="error mt-2 text-red-500" v-if="!$v.form.email.required">Field is required</div>
         <div class="error mt-2 text-red-500" v-if="!$v.form.email.minLength">Name must have at least {{$v.form.email.$params.minLength.min}} letters.</div>
         <div class="error mt-2 text-red-500" v-if="!$v.form.email.email">Phai dung dinh dang email.</div>
-        <div class="error mt-2 text-red-500" v-if="typeof errors.email !== 'undefined'">{{ errors.email[0] }}</div>
       </div>
 
       <div class="form-control" :class="{ 'form-group--error': $v.form.password.$error }">
@@ -26,9 +25,14 @@
         <input class="border border-gray-600" v-model="form.password" type="password" placeholder="Password">
         <div class="error mt-2 text-red-500" v-if="!$v.form.password.required">Field is required</div>
         <div class="error mt-2 text-red-500" v-if="!$v.form.password.minLength">Name must have at least {{$v.form.password.$params.minLength.min}} letters.</div>
-        <div class="error mt-2 text-red-500" v-if="typeof errors.password !== 'undefined'">{{ errors.password[0] }}</div>
       </div>
-      <button>Login</button>
+      <div class="form-control" :class="{ 'form-group--error': $v.form.password.$error }">
+        <p>Password</p>
+        <input class="border border-gray-600" v-model="form.password" type="password" placeholder="Password">
+        <div class="error mt-2 text-red-500" v-if="!$v.form.password.required">Field is required</div>
+        <div class="error mt-2 text-red-500" v-if="!$v.form.password.minLength">Name must have at least {{$v.form.password.$params.minLength.min}} letters.</div>
+      </div>
+      <button>Register</button>
     </form>
   </div>
 </template>
@@ -45,7 +49,6 @@ export default {
       form: {},
       userData: {},
       hasError: false,
-      errors: {},
     }
   },
   validations: {
@@ -69,14 +72,11 @@ export default {
       } else {
         this.hasError = false
         try {
-          const res = await axios.post('https://task.huuhienqt.dev/api/v1/login/', this.form)
-          localStorage.setItem("user", JSON.stringify(res.data.data));
-          this.$router.push({name: "Home"})
+          const res = await axios.post('https://task.huuhienqt.dev/api/v1/register', this.form)
+          // console.log (res.data)
+          this.userData = res.data
         } catch (error) {
-          console.log (error.response.data)
-          if (typeof error.response.data.meta.errors !== 'undefined') {
-            this.errors = error.response.data.meta.errors
-          }
+          console.log (error)
         }
       }
     }
