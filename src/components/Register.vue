@@ -1,6 +1,6 @@
 <template>
   <div class="form-login">
-    <form action="" @submit="postUserLogin()" @submit.prevent>
+    <form action="" @submit="postUserRegister()" @submit.prevent>
       <div class="flex">
         <router-link to="/login" class="w-1/2 text-center text-xl text-green-500 font-bold">LOGIN</router-link>
         <router-link to="/register" class="w-1/2 text-center text-xl text-green-500 font-bold">REGISTER</router-link>
@@ -12,12 +12,19 @@
           <svg class="fill-current h-6 w-6 text-red-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><title>Close</title><path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"/></svg>
         </span>
       </div>
+      <div>
+        <p>name</p>
+        <input class="border border-gray-600" v-model="form.name" type="text" placeholder="name">
+        <!-- <div class="error mt-2 text-red-500" v-if="typeof errors.name !== 'undefined'">{{ errors.name[0] }}</div> -->
+      </div>
+
       <div class="form-control" :class="{ 'form-group--error': $v.form.email.$error }">
         <p>Email</p>
         <input class="border border-gray-600" v-model="form.email" type="email" placeholder="Email">
         <div class="error mt-2 text-red-500" v-if="!$v.form.email.required">Field is required</div>
         <div class="error mt-2 text-red-500" v-if="!$v.form.email.minLength">Name must have at least {{$v.form.email.$params.minLength.min}} letters.</div>
         <div class="error mt-2 text-red-500" v-if="!$v.form.email.email">Phai dung dinh dang email.</div>
+        <!-- <div class="error mt-2 text-red-500" v-if="typeof errors.password !== 'undefined'">{{ errors.password[0] }}</div> -->
       </div>
 
       <div class="form-control" :class="{ 'form-group--error': $v.form.password.$error }">
@@ -25,12 +32,13 @@
         <input class="border border-gray-600" v-model="form.password" type="password" placeholder="Password">
         <div class="error mt-2 text-red-500" v-if="!$v.form.password.required">Field is required</div>
         <div class="error mt-2 text-red-500" v-if="!$v.form.password.minLength">Name must have at least {{$v.form.password.$params.minLength.min}} letters.</div>
+        <!-- <div class="error mt-2 text-red-500" v-if="typeof errors.password !== 'undefined'">{{ errors.password[0] }}</div> -->
       </div>
       <div class="form-control" :class="{ 'form-group--error': $v.form.password.$error }">
-        <p>Password</p>
-        <input class="border border-gray-600" v-model="form.password" type="password" placeholder="Password">
-        <div class="error mt-2 text-red-500" v-if="!$v.form.password.required">Field is required</div>
-        <div class="error mt-2 text-red-500" v-if="!$v.form.password.minLength">Name must have at least {{$v.form.password.$params.minLength.min}} letters.</div>
+        <p>password_confirmation</p>
+        <input class="border border-gray-600" v-model="form.password_confirmation" type="password" placeholder="password_confirmation">
+        <div class="error mt-2 text-red-500" v-if="!$v.form.repeatPassword">Field is required</div>
+        <div class="error mt-2 text-red-500" v-if="!$v.form.repeatPassword.sameAsPassword">Passwords must be identical.</div>
       </div>
       <button>Register</button>
     </form>
@@ -39,10 +47,10 @@
 <script>
 import axios from 'axios'
 import { validationMixin } from 'vuelidate'
-const { required, minLength, email } = require('vuelidate/lib/validators')
+const { required, minLength, email, sameAs } = require('vuelidate/lib/validators')
 
 export default {
-  name: 'Login',
+  name: 'Register',
   mixins: [validationMixin],
   data () {
     return {
@@ -60,23 +68,31 @@ export default {
       },
       password: {
         required,
+        minLength: minLength(6),
+      },
+      repeatPassword: {
+        sameAsPassword: sameAs('password'),
+      },
+      name: {
         minLength: minLength(4),
       }
     },
   },
   methods: {
-    async postUserLogin() {
+    async postUserRegister() {
       this.$v.$touch()
       if (this.$v.$invalid) {
         this.hasError = true
       } else {
         this.hasError = false
         try {
-          const res = await axios.post('https://task.huuhienqt.dev/api/v1/register', this.form)
-          // console.log (res.data)
-          this.userData = res.data
+           await axios.post('https://task.huuhienqt.dev/api/v1/register/', this.form)
+          this.$router.push({name: "Login"})
         } catch (error) {
-          console.log (error)
+          console.log (error.response.data)
+          if (typeof error.response.data.meta.errors !== 'undefined') {
+            this.errors = error.response.data.meta.errors
+          }
         }
       }
     }
