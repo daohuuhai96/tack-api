@@ -9,6 +9,11 @@
 <script>
 export default {
   name: 'Home',
+  data () {
+    return {
+
+    }
+  },
   methods: {
      logout() {
     localStorage.removeItem('user');

@@ -1,9 +1,9 @@
-<template>
+<template class="bg">
   <div class="form-login">
     <form action="" @submit="postUserLogin()" @submit.prevent>
       <div class="flex">
-        <router-link to="/login" class="w-1/2 text-center text-xl text-green-500 font-bold">LOGIN</router-link>
-        <router-link to="/register" class="w-1/2 text-center text-xl text-green-500 font-bold">REGISTER</router-link>
+        <router-link to="/login" class="w-1/2 text-center text-xl border-r-2 border-black font-bold">LOGIN</router-link>
+        <router-link to="/register" class="w-1/2 text-center text-xl font-bold">REGISTER</router-link>
       </div>
       <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert" v-if="hasError">
         <strong class="font-bold">Error!</strong>
@@ -13,8 +13,8 @@
         </span>
       </div>
       <div class="form-control" :class="{ 'form-group--error': $v.form.email.$error }">
-        <p>Email</p>
-        <input class="border border-gray-600" v-model="form.email" type="email" placeholder="Email">
+        <p class="font-semibold">Email</p>
+        <input class="border-b border-gray-400 italic focus:outline-none text-sm::placeholder" v-model="form.email" type="email" placeholder="Email">
         <div class="error mt-2 text-red-500" v-if="!$v.form.email.required">Field is required</div>
         <div class="error mt-2 text-red-500" v-if="!$v.form.email.minLength">Name must have at least {{$v.form.email.$params.minLength.min}} letters.</div>
         <div class="error mt-2 text-red-500" v-if="!$v.form.email.email">Phai dung dinh dang email.</div>
@@ -22,13 +22,15 @@
       </div>
 
       <div class="form-control" :class="{ 'form-group--error': $v.form.password.$error }">
-        <p>Password</p>
-        <input class="border border-gray-600" v-model="form.password" type="password" placeholder="Password">
+        <p class="font-semibold">Password</p>
+        <input class="focus:outline-none border-b italic border-gray-400 text-sm::placeholder" v-model="form.password" type="password" placeholder="Password">
         <div class="error mt-2 text-red-500" v-if="!$v.form.password.required">Field is required</div>
         <div class="error mt-2 text-red-500" v-if="!$v.form.password.minLength">Name must have at least {{$v.form.password.$params.minLength.min}} letters.</div>
         <div class="error mt-2 text-red-500" v-if="typeof errors.password !== 'undefined'">{{ errors.password[0] }}</div>
       </div>
-      <button>Login</button>
+      <div class="flex justify-center items-center mt-6">
+        <button class="rounded text-white text-base font-bold focus:outline-none">Login</button>
+      </div>
     </form>
   </div>
 </template>
@@ -86,17 +88,20 @@ export default {
 </script>
 <style scoped>
 .form-login {
-  margin-top: 10em;
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
+  background: linear-gradient(115deg, #56d8e4 10%, #9f01ea 90%);
 }
 form {
+  border-radius: 20px;
   padding: 30px;
   padding-bottom: 60px;
-  padding-right: 50px;
-  border: 1px solid green;
-  width: 500px;
+  padding-right: 30px;
+  width: 450px;
+  background-color: #ffffff;
+  box-shadow: 0 0 8px rgba(0,0,0,0.1);
 }
 h1 {
   color: green;
@@ -115,9 +120,9 @@ input {
 button {
   font-size: 16px;
   margin-top: 20px;
-  padding: 10px 30px;
-  background-color: #42b983;
-  border: #42b983;
+  padding: 10px 50px;
+  background: linear-gradient(115deg, #56d8e4 10%, #9f01ea 90%);
   cursor: pointer;
+  box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
 }
 </style>
