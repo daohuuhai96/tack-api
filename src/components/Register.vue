@@ -34,11 +34,11 @@
         <div class="error mt-2 text-red-500" v-if="!$v.form.password.required">Field is required</div>
         <div class="error mt-2 text-red-500" v-if="!$v.form.password.minLength">Name must have at least {{$v.form.password.$params.minLength.min}} letters.</div>
       </div>
-      <div class="form-control" :class="{ 'form-group--error': $v.form.repeatPassword.$error }">
-        <p class="font-semibold">Password_confirmation</p>
-        <input class="focus:outline-none border-b italic border-gray-400 text-sm::placeholder" v-model="form.repeatPassword" type="password" placeholder="Password_confirmation">
-        <div class="error mt-2 text-red-500" v-if="!$v.form.repeatPassword">Field is required</div>
-        <div class="error mt-2 text-red-500" v-if="!$v.form.repeatPassword.sameAsPassword">Passwords must be identical.</div>
+      <div class="form-control" :class="{ 'form-group--error': $v.form.password_confirmation.$error }">
+        <p class="font-semibold">Password confirmation</p>
+        <input class="focus:outline-none border-b italic border-gray-400 text-sm::placeholder" v-model="form.password_confirmation" type="password" placeholder="Password_confirmation">
+        <div class="error mt-2 text-red-500" v-if="!$v.form.password_confirmation">Field is required</div>
+        <div class="error mt-2 text-red-500" v-if="!$v.form.password_confirmation.sameAsPassword">Passwords must be identical.</div>
         <div class="error mt-2 text-red-500" v-if="typeof errors.password !== 'undefined'">{{ errors.password[0] }}</div>
       </div>
       <div class="flex justify-center items-center mt-6">
@@ -74,7 +74,7 @@ export default {
         required,
         minLength: minLength(6),
       },
-      repeatPassword: {
+      password_confirmation: {
         sameAsPassword: sameAs('password'),
       },
       name: {
