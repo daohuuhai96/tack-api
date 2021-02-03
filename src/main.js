@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
 import routes from './router'
+import api from "./plugins/axios";
 
 import Vuelidate from 'vuelidate'
 Vue.use(Vuelidate)
@@ -15,6 +16,7 @@ const router = new VueRouter({
 })
 
 Vue.config.productionTip = false
+Vue.use(api);
 
 new Vue({
   router,
