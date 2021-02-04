@@ -17,31 +17,102 @@
       <div class="ml-20">
         <p class="mt-2 italic font-medium text-base"><span class="font-bold text-xl mr-4">Name: </span> {{ userData.name }}</p>
         <p class="mt-2 italic font-medium text-base"><span class="font-bold text-xl mr-4">Email: </span> {{ userData.email }}</p>
-        <p class="mt-2 italic font-medium text-base"><span class="font-bold text-xl mr-4">Phone_number: </span>  {{userData.phone_number}} </p>
-        <p class="mt-2 italic font-medium text-base"><span class="font-bold text-xl mr-4">Address: </span>  {{userData.address}} </p>
-        <p class="mt-2 italic font-medium text-base"><span class="font-bold text-xl mr-4">Bios: </span>  {{userData.bios}} </p>
-        <p class="mt-2 italic font-medium text-base"><span class="font-bold text-xl mr-4">Gender: </span>  {{userData.gender}} </p>
-        <p class="mt-2 italic font-medium text-base"><span class="font-bold text-xl mr-4">Birthday: </span>  {{userData.birthday}} </p>
-        <p class="mt-2 italic font-medium text-base"><span class="font-bold text-xl mr-4">First_name: </span>  {{userData.first_name}} </p>
-        <p class="mt-2 italic font-medium text-base"><span class="font-bold text-xl mr-4">Last_name: </span>  {{userData.last_name}} </p>
-        <p class="mt-2 italic font-medium text-base"><span class="font-bold text-xl mr-4">Is_notify: </span>  {{userData.is_notify}} </p>
+        <p class="mt-2 italic font-medium text-base"><span class="font-bold text-xl mr-4">Phone_number: </span> {{userData.phone_number}} </p>
+        <p class="mt-2 italic font-medium text-base"><span class="font-bold text-xl mr-4">Address: </span> {{userData.address}} </p>
+        <p class="mt-2 italic font-medium text-base"><span class="font-bold text-xl mr-4">Bios: </span> {{userData.bios}} </p>
+        <p class="mt-2 italic font-medium text-base"><span class="font-bold text-xl mr-4">Gender: </span> {{userData.gender}} </p>
+        <p class="mt-2 italic font-medium text-base"><span class="font-bold text-xl mr-4">Birthday: </span> {{userData.birthday}} </p>
+        <p class="mt-2 italic font-medium text-base"><span class="font-bold text-xl mr-4">First_name: </span> {{userData.first_name}} </p>
+        <p class="mt-2 italic font-medium text-base"><span class="font-bold text-xl mr-4">Last_name: </span> {{userData.last_name}} </p>
+        <p class="mt-2 italic font-medium text-base"><span class="font-bold text-xl mr-4">Is_notify: </span> {{userData.is_notify}} </p>
         <button class="px-12 py-2 mt-8 border rounded border-blue-400 font-bold text-xl bg-blue-400"  @click="logOut()">logout</button>
+      </div>
+    </div>
+    <!-- <div class="mt-20">
+      <div v-for="projectData in projectDatas" :key="projectData">
+        <p>{{ projectData }}</p>
+      </div>
+      <p>{{ projectDatas.name }}</p>
+    </div>
+    <div>
+      <form>
+        <input type="text" name="" v-model="title">
+        <input type="submit" value="ADD" class="">
+      </form>
+    </div> -->
+    <div class="pl-5 pr-5 mt-2 container m-auto shadow-2xl mb-20">
+      <div class="flex items-center pt-6">
+        <p class="w-1/2 font-bold text-blue-400">PROJECT</p>
+        <form action="" class="w-1/2">
+          <input class="py-1.5 border-b w-full border-gray-300  pl-4 focus:outline-none" v-model="search" type="text" name="" id="" placeholder="Search....">
+        </form>
+      </div>
+      <div class="flex border-b border-gray-300 pb-4 pt-8">
+        <p class="w-2/12 font-semibold text-lg">Name</p>
+        <p class="w-1/12 font-semibold text-lg">Code</p>
+        <p class="w-3/12 font-semibold text-lg">Category</p>
+        <p class="w-2/12 font-semibold text-lg">Member</p>
+        <p class="w-2/12 font-semibold text-lg">Creater at</p>
+        <p class="w-2/12 font-semibold text-lg">Updated at</p>
+      </div>
+      <div class="mt-6 flex pb-6" v-for="projectData in projectDatas" :key="projectData">
+        <p class="w-2/12 font-bold text-base"> {{projectData.name}} </p>
+        <p class="w-1/12 font-normal text-base">{{projectData.code}}</p>
+        <p class="w-3/12 font-normal text-base"> {{projectData.category.title}} </p>
+        <p class="w-2/12 font-normal text-base">{{projectData.member}}</p>
+        <p class="w-2/12 font-normal text-base">{{projectData.created_at}}</p>
+        <p class="w-2/12 font-normal text-base">{{projectData.updated_at}}</p>
+      </div>
+      <div class="pb-6 flex justify-center items-center">
+        <a href="#" class="w-8 h-8 bg-blue-400 text-white flex justify-center items-center rounded"
+        :class="[ { dissabled: !paginate.prev_page_url } ]"
+        @click="getProject(paginate.prev_page_url)">
+          <i class="fal fa-chevron-left"></i>
+        </a>
+        <a href="#" class="ml-2 w-8 h-8 bg-blue-400 text-white flex justify-center items-center rounded">
+          {{ paginate.current_page }}
+        </a>
+        <a href="#" class="ml-2 w-8 h-8 bg-blue-400 text-white flex justify-center items-center rounded">
+          {{ paginate.last_page }}
+        </a>
+        <a href="#" class="ml-2 w-8 h-8 bg-blue-400 text-white flex justify-center items-center rounded"
+        :class="[ { dissabled: !paginate.next_page_url } ]"
+        @click="getProject(paginate.next_page_url)">
+          <i class="fal fa-chevron-right"></i>
+        </a>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+// import { ref } from 'Vue'
+
 export default {
   name: 'Home',
   data () {
+    // const title = ref('')
     return {
+      // title,
       userData: {},
       errors: {},
+      projectDatas: [],
+      projectUrl: '/projects?page=1&limit=15',
+      search: null,
+      paginate: {},
+    }
+  },
+  watch: {
+    search() {
+      if (this.search && this.search.length >= 2) {
+        this.projectUrl = '/projects?page=1&limit=15&search=name:' + this.search
+        this.getProject()
+      }
     }
   },
   created() {
     this.getProFile()
+    this.getProject()
   },
   methods: {
     // async logOut() {
@@ -72,10 +143,20 @@ export default {
         // console.log (errors.response.data)
         }
       },
+
+    async getProject() {
+      try {
+        const respon = await this.$axios.get(this.projectUrl)
+        this.paginate = respon.data.data
+        this.paginate.first_page_url = this.paginate.first_page_url || this.paginate.path
+        this.projectDatas = respon.data.data.data
+        console.log(this.paginate.first_page_url)
+      } catch (errors) {
+          //todo
+      }
     },
-
-
-  }
+  },
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
