@@ -55,7 +55,7 @@
         <p class="w-2/12 font-semibold text-lg">Creater at</p>
         <p class="w-2/12 font-semibold text-lg">Updated at</p>
       </div>
-      <div class="mt-6 flex pb-6" v-for="projectData in projectDatas" :key="projectData">
+      <div class="mt-6 flex pb-6" v-for="projectData in projectDatas" :key="projectData.id">
         <p class="w-2/12 font-bold text-base"> {{projectData.name}} </p>
         <p class="w-1/12 font-normal text-base">{{projectData.code}}</p>
         <p class="w-3/12 font-normal text-base"> {{projectData.category.title}} </p>
@@ -63,21 +63,19 @@
         <p class="w-2/12 font-normal text-base">{{projectData.created_at}}</p>
         <p class="w-2/12 font-normal text-base">{{projectData.updated_at}}</p>
       </div>
-      <div class="pb-6 flex justify-center items-center">
+      <div class="pb-6 flex justify-center items-center" v-if="maxPage > 1">
         <a href="#" class="w-8 h-8 bg-blue-400 text-white flex justify-center items-center rounded"
-        :class="[ { dissabled: !paginate.prev_page_url } ]"
-        @click="getProject(paginate.prev_page_url)">
+          :class="[ { dissabled: queries.page <= 1 } ]"
+          @click.prevent="goToPage(queries.page - 1)">
           <i class="fal fa-chevron-left"></i>
         </a>
-        <a href="#" class="ml-2 w-8 h-8 bg-blue-400 text-white flex justify-center items-center rounded">
-          {{ paginate.current_page }}
-        </a>
-        <a href="#" class="ml-2 w-8 h-8 bg-blue-400 text-white flex justify-center items-center rounded">
-          {{ paginate.last_page }}
+
+        <a href="#" @click.prevent="goToPage(p)" class="ml-2 w-8 h-8 bg-blue-400 text-white flex justify-center items-center rounded" v-for="p in maxPage" :key="`page-${p}`">
+          {{ p }}
         </a>
         <a href="#" class="ml-2 w-8 h-8 bg-blue-400 text-white flex justify-center items-center rounded"
-        :class="[ { dissabled: !paginate.next_page_url } ]"
-        @click="getProject(paginate.next_page_url)">
+          :class="[ { dissabled: this.queries.page >= maxPage } ]"
+          @click.prevent="goToPage(queries.page + 1)">
           <i class="fal fa-chevron-right"></i>
         </a>
       </div>
@@ -97,15 +95,32 @@ export default {
       userData: {},
       errors: {},
       projectDatas: [],
-      projectUrl: '/projects?page=1&limit=15',
+      projectUrl: '/projects',
       search: null,
       paginate: {},
+      queries: {
+        page: 1,
+        limit: 20,
+      },
+      maxPage: 1,
+    }
+  },
+  computed: {
+    queryUrl() {
+      var str = [];
+      for (var p in this.queries) {
+        // eslint-disable-next-line no-prototype-builtins
+        if (this.queries.hasOwnProperty(p)) {
+          str.push(encodeURIComponent(p) + "=" + encodeURIComponent(this.queries[p]));
+        }
+      }
+      return str.join("&");
     }
   },
   watch: {
     search() {
       if (this.search && this.search.length >= 2) {
-        this.projectUrl = '/projects?page=1&limit=15&search=name:' + this.search
+        this.queries.search = `name:${this.search}`
         this.getProject()
       }
     }
@@ -146,15 +161,19 @@ export default {
 
     async getProject() {
       try {
-        const respon = await this.$axios.get(this.projectUrl)
-        this.paginate = respon.data.data
-        this.paginate.first_page_url = this.paginate.first_page_url || this.paginate.path
+        const respon = await this.$axios.get(`${this.projectUrl}?${this.queryUrl}`)
         this.projectDatas = respon.data.data.data
-        console.log(this.paginate.first_page_url)
+        this.maxPage = respon.data.data.last_page
       } catch (errors) {
           //todo
       }
     },
+
+    async goToPage(page) {
+      if (page < 1 || page > this.maxPage) return;
+      this.queries.page = page
+      await this.getProject()
+    }
   },
 }
 </script>
