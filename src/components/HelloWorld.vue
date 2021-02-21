@@ -28,18 +28,6 @@
         <button class="px-12 py-2 mt-8 border rounded border-blue-400 font-bold text-xl bg-blue-400"  @click="logOut()">logout</button>
       </div>
     </div>
-    <!-- <div class="mt-20">
-      <div v-for="projectData in projectDatas" :key="projectData">
-        <p>{{ projectData }}</p>
-      </div>
-      <p>{{ projectDatas.name }}</p>
-    </div>
-    <div>
-      <form>
-        <input type="text" name="" v-model="title">
-        <input type="submit" value="ADD" class="">
-      </form>
-    </div> -->
     <div class="pl-5 pr-5 mt-2 container m-auto shadow-2xl mb-20">
       <div class="flex items-center pt-6">
         <p class="w-1/2 font-bold text-blue-400">PROJECT</p>
